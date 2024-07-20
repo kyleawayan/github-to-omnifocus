@@ -1,5 +1,6 @@
 // Return the tasks for a project having a given tag
 // Accepts a TaskQuery as JSON in an OSA_ARGS env var.
+// TODO: Fix arguments as it just checks a single tag now
 // Call it:
 //   set -gx OSA_ARGS '{"projectName": "GitHub Notifications", "tags": ["github"]}'
 //   osascript -l JavaScript oftasksforprojectwithtag.js | jq .
@@ -23,8 +24,7 @@ function tasksForProjectWithTag(
     // @ts-ignore
     const ofApp = Application("OmniFocus")
     const ofDoc = ofApp.defaultDocument
-    const project = ofDoc.flattenedProjects
-        .whose({ name: query.projectName })[0];
+    const tasksInTag = ofDoc.flattenedTags.byName("github")
 
     const tagFoundOrCreated = charTag => {
         const
@@ -49,7 +49,7 @@ function tasksForProjectWithTag(
     // const ofAppTag = tagFoundOrCreated(appTag)
     // const ofTypeTag = tagFoundOrCreated(typeTag)
 
-    return project.tasks()
+    return tasksInTag.tasks()
         .filter((task) => task.completed() === false)
         .filter((task) => {
             // Task must have all tags
