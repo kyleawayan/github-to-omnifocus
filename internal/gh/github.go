@@ -21,10 +21,11 @@ var paginationPerPage = 30
 // PRs and notifications containing only the information the rest of the
 // program requires.
 type GitHubItem struct {
-	Title   string
-	HTMLURL string
-	APIURL  string
-	K       string
+	Title    string
+	HTMLURL  string
+	APIURL   string
+	K        string
+	RepoName string
 }
 
 func (item GitHubItem) String() string {
@@ -87,10 +88,11 @@ func (ghg *GitHubGateway) GetIssues() ([]GitHubItem, error) {
 	items := []GitHubItem{}
 	for _, issue := range issues {
 		item := GitHubItem{
-			Title:   strings.TrimSpace(issue.GetTitle()),
-			HTMLURL: issue.GetHTMLURL(),
-			APIURL:  issue.GetURL(),
-			K:       fmt.Sprintf("%s#%d", issue.GetRepository().GetFullName(), issue.GetNumber()),
+			Title:    strings.TrimSpace(issue.GetTitle()),
+			HTMLURL:  issue.GetHTMLURL(),
+			APIURL:   issue.GetURL(),
+			K:        fmt.Sprintf("%s#%d", issue.GetRepository().GetFullName(), issue.GetNumber()),
+			RepoName: issue.GetRepository().GetFullName(),
 		}
 		items = append(items, item)
 	}
